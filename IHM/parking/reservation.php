@@ -1,23 +1,34 @@
-<p id="aide-selection" class="aide">Clique sur une place pour voir ses réservations et la réserver.</p>
+<section class="carte">
+    <h2>Réserver une place</h2>
 
-<section id="panneau-reservation" class="panneau cache">
-    <h2>Place <span id="place-numero"></span></h2>
+    <p id="aide-selection" class="aide">Clique sur une place pour voir ses réservations et la réserver.</p>
 
-    <h3>Réservations à venir</h3>
-    <ul id="liste-reservations"></ul>
+    <div id="panneau-reservation" class="cache">
+        <p class="place-choisie">Place <strong id="place-numero"></strong></p>
 
-    <h3>Réserver</h3>
-    <form id="form-reservation">
-        <input type="hidden" id="place_id" name="place_id">
+        <h3>Réservations à venir</h3>
+        <ul id="liste-reservations" class="liste-res"></ul>
 
-        <label for="heure_debut">Début</label>
-        <input type="datetime-local" id="heure_debut" required>
+        <form id="form-reservation">
+            <input type="hidden" id="place_id" name="place_id">
 
-        <label for="heure_fin">Fin</label>
-        <input type="datetime-local" id="heure_fin" required>
+            <label for="date_res">Date</label>
+            <input type="date" id="date_res" required>
 
-        <button type="submit">Confirmer</button>
-    </form>
+            <div class="deux-col">
+                <div>
+                    <label for="h_debut">Arrivée</label>
+                    <input type="time" id="h_debut" required>
+                </div>
+                <div>
+                    <label for="h_fin">Départ</label>
+                    <input type="time" id="h_fin" required>
+                </div>
+            </div>
 
-    <p id="message-reservation" class="message"></p>
+            <button type="submit" class="btn-jaune">Réserver</button>
+        </form>
+
+        <p id="message-reservation" class="message"></p>
+    </div>
 </section>

@@ -215,3 +215,56 @@ input {
     .pill, .nom { display: none; }
     .grille { grid-template-columns: repeat(2, 1fr); }
 }
+/* ---------- Page Mes réservations ---------- */
+.mes-reservations { max-width: 800px; margin: 10px auto 40px; padding: 0 20px; }
+
+.table-res { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+.table-res th {
+    text-align: left; padding: 10px 8px;
+    color: #6b7280; font-size: 13px; border-bottom: 2px solid #e5e7eb;
+}
+.table-res td { padding: 12px 8px; border-bottom: 1px solid #e5e7eb; }
+
+.statut { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.statut.en_cours { background: #fee2e2; color: #991b1b; }
+.statut.a_venir  { background: #fef3c7; color: #92400e; }
+.statut.terminee { background: #e5e7eb; color: #4b5563; }
+
+.btn-annuler {
+    margin: 0; padding: 6px 14px;
+    background: #fff; color: #dc2626; border: 1px solid #dc2626;
+    border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.btn-annuler:hover { background: #dc2626; color: #fff; }
+/* ---------- Couleurs des places (vert / rouge transparents) ---------- */
+.pastille.libre   { background: #16a34a; }
+.pastille.occupee { background: #dc2626; }
+
+.place.libre {
+    background: rgba(22, 163, 74, 0.12);
+    border-color: rgba(22, 163, 74, 0.45);
+}
+.place.occupee {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(220, 38, 38, 0.45);
+}
+.place.occupee .num  { color: #991b1b; }
+.place.occupee .info { color: #dc2626; font-weight: 600; }
+
+/* Place sélectionnée : contour bleu foncé, la couleur de fond ne change plus */
+.place.selectionnee {
+    box-shadow: 0 0 0 3px #1e3a8a;
+}
+/* Place sélectionnée : la bordure garde sa couleur (vert ou rouge) */
+.place.selectionnee {
+    box-shadow: none;
+    outline: none;
+}
+.place.libre.selectionnee {
+    background: rgba(22, 163, 74, 0.28);
+    border-color: #16a34a;
+}
+.place.occupee.selectionnee {
+    background: rgba(220, 38, 38, 0.28);
+    border-color: #dc2626;
+}

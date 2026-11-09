@@ -47,6 +47,11 @@ switch ($action) {
         require __DIR__ . '/IHM/parking/dashboard.php';
         break;
 
+    case 'mes_reservations':
+        exigerConnexion();
+        require __DIR__ . '/IHM/reservations/mes_reservations.php';
+        break;
+        
     default:
         http_response_code(404);
         echo 'Page introuvable';

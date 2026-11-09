@@ -72,4 +72,31 @@ class Reservation
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+
+        public static function parUtilisateur(int $userId): array
+    {
+        $conn = getConnexion();
+        $stmt = $conn->prepare(
+            "SELECT r.id, p.numero, r.heure_debut, r.heure_fin
+             FROM reservations r
+             JOIN places p ON p.id = r.place_id
+             WHERE r.utilisateur_id = ?
+             ORDER BY r.heure_debut DESC"
+        );
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public static function annuler(int $id, int $userId, string $maintenant): bool
+    {
+        $conn = getConnexion();
+        $stmt = $conn->prepare(
+            "DELETE FROM reservations
+             WHERE id = ? AND utilisateur_id = ? AND heure_fin > ?"
+        );
+        $stmt->bind_param("iis", $id, $userId, $maintenant);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
 }

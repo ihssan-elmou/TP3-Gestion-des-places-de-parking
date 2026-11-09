@@ -40,4 +40,35 @@ class ReservationTraitement
             date('Y-m-d H:i:s', $tFin)
         );
     }
+
+        public static function mesReservations(int $userId): array
+    {
+        $maintenant = date('Y-m-d H:i:s');
+        $lignes = Reservation::parUtilisateur($userId);
+
+        foreach ($lignes as &$l) {
+            if ($l['heure_fin'] <= $maintenant) {
+                $l['statut'] = 'terminee';
+            } elseif ($l['heure_debut'] <= $maintenant) {
+                $l['statut'] = 'en_cours';
+            } else {
+                $l['statut'] = 'a_venir';
+            }
+        }
+        unset($l);
+        return $lignes;
+    }
+
+    public static function annuler(int $userId, array $post): array
+    {
+        $id = (int) ($post['reservation_id'] ?? 0);
+        if ($id <= 0) {
+            return ['ok' => false, 'message' => 'Réservation invalide'];
+        }
+
+        if (Reservation::annuler($id, $userId, date('Y-m-d H:i:s'))) {
+            return ['ok' => true, 'message' => 'Réservation annulée'];
+        }
+        return ['ok' => false, 'message' => "Impossible d'annuler cette réservation"];
+    }
 }

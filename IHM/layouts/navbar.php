@@ -3,10 +3,14 @@
 
     <?php if (estConnecte()): ?>
         <nav class="pill">
-            <a class="actif" href="index.php?action=parking">Dashboard</a>
+            <a class="<?= ($titre ?? '') === 'Parking' ? 'actif' : '' ?>"
+               href="index.php?action=parking">Dashboard</a>
+            <a class="<?= ($titre ?? '') === 'Mes réservations' ? 'actif' : '' ?>"
+               href="index.php?action=mes_reservations">Mes réservations</a>
         </nav>
 
         <div class="topbar-droite">
+            <?php if (in_array('notification.js', $scripts ?? [])): ?>
             <div class="cloche-zone">
                 <button type="button" id="cloche" class="icone-btn" aria-label="Notifications">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -23,6 +27,7 @@
                     </ul>
                 </div>
             </div>
+            <?php endif; ?>
 
             <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['utilisateur_nom'], 0, 1))) ?></div>
             <span class="nom"><?= htmlspecialchars($_SESSION['utilisateur_nom']) ?></span>

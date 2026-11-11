@@ -2,27 +2,27 @@ var LIBELLES = { en_cours: 'En cours', a_venir: 'À venir', terminee: 'Terminée
 
 // Requête XMLHttpRequest (cette page ne charge pas parking.js)
 function ajax(methode, url, donnees, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(methode, url, true);
+    var objetXHR = new XMLHttpRequest();
+    objetXHR.open(methode, url, true);
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState !== 4) { return; }
-
-        if (xhr.status === 401) {
-            window.location.href = 'index.php?action=login';
-            return;
+    // Fonction de rappel, nommée comme dans le cours
+    objetXHR.onreadystatechange = function actualiserPage() {
+        if (objetXHR.readyState === 4) {
+            if (objetXHR.status === 401) {          // session expirée
+                window.location.href = 'index.php?action=login';
+                return;
+            }
+            var reponse = null;
+            try { reponse = JSON.parse(objetXHR.responseText); } catch (e) {}
+            callback(reponse);
         }
-
-        var reponse = null;
-        try { reponse = JSON.parse(xhr.responseText); } catch (e) {}
-        callback(reponse);
     };
 
     if (methode === 'POST') {
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send(donnees);
+        objetXHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        objetXHR.send(donnees);
     } else {
-        xhr.send();
+        objetXHR.send(null);
     }
 }
 

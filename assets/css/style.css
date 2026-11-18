@@ -268,3 +268,21 @@ input {
     background: rgba(220, 38, 38, 0.28);
     border-color: #dc2626;
 }
+/* ---------- Fenêtre de confirmation ---------- */
+.modal-fond {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px;
+    background: rgba(31, 41, 55, 0.45);
+}
+.modal { width: 100%; max-width: 400px; }
+.modal-texte { margin: 0 0 20px; color: #4b5563; font-size: 15px; line-height: 1.5; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.modal-actions button {
+    padding: 10px 20px; border-radius: 999px; cursor: pointer;
+    font-size: 14px; font-weight: 700;
+}
+.btn-secondaire { background: #fff; color: #1f2937; border: 1px solid #d1d5db; }
+.btn-secondaire:hover { background: #f3f4f6; }
+.btn-danger { background: #dc2626; color: #fff; border: 1px solid #dc2626; }
+.btn-danger:hover { background: #b91c1c; }

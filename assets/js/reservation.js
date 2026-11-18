@@ -18,22 +18,31 @@ function initialiserChamps() {
     champDate.min = dateLocale(maintenant);
     champDate.value = dateLocale(debut);
 
+    var champDateFin = document.getElementById('date_fin');
+    champDateFin.min = dateLocale(debut);
+    champDateFin.value = dateLocale(fin);
+
     document.getElementById('h_debut').value = heureLocale(debut);
-    document.getElementById('h_fin').value =
-        (dateLocale(fin) === dateLocale(debut)) ? heureLocale(fin) : '23:59';
+    document.getElementById('h_fin').value = heureLocale(fin);
 }
 
 initialiserChamps();
+
+// La date de départ ne peut pas être avant la date d'arrivée
+document.getElementById('date_res').addEventListener('change', function () {
+    var dFin = document.getElementById('date_fin');
+    dFin.min = this.value;
+    if (dFin.value < this.value) { dFin.value = this.value; }
+});
 
 document.getElementById('form-reservation').addEventListener('submit', function (e) {
     e.preventDefault();
 
     var msg = document.getElementById('message-reservation');
-    var date = document.getElementById('date_res').value;
 
     // On recompose le format attendu par le serveur : 2026-11-06T16:00
-    var debut = date + 'T' + document.getElementById('h_debut').value;
-    var fin   = date + 'T' + document.getElementById('h_fin').value;
+    var debut = document.getElementById('date_res').value + 'T' + document.getElementById('h_debut').value;
+    var fin   = document.getElementById('date_fin').value + 'T' + document.getElementById('h_fin').value;
 
     var donnees =
         'place_id=' + encodeURIComponent(document.getElementById('place_id').value) +

@@ -12,16 +12,26 @@
         <form id="form-reservation">
             <input type="hidden" id="place_id" name="place_id">
 
-            <label for="date_res">Date</label>
-            <input type="date" id="date_res" required>
-
+            <h3>Début</h3>
             <div class="deux-col">
                 <div>
-                    <label for="h_debut">Arrivée</label>
-                    <input type="time" id="h_debut" required>
+                    <label for="date_res">Date</label>
+                    <input type="date" id="date_res" required>
                 </div>
                 <div>
-                    <label for="h_fin">Départ</label>
+                    <label for="h_debut">Heure</label>
+                    <input type="time" id="h_debut" required>
+                </div>
+            </div>
+
+            <h3>Fin</h3>
+            <div class="deux-col">
+                <div>
+                    <label for="date_fin">Date</label>
+                    <input type="date" id="date_fin" required>
+                </div>
+                <div>
+                    <label for="h_fin">Heure</label>
                     <input type="time" id="h_fin" required>
                 </div>
             </div>

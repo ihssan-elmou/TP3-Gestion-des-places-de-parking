@@ -61,7 +61,7 @@ class Reservation
     {
         $conn = getConnexion();
         $stmt = $conn->prepare(
-            "SELECT r.id, p.numero, u.nom, r.heure_debut, r.heure_fin
+            "SELECT r.id, r.utilisateur_id, p.numero, u.nom, r.heure_debut, r.heure_fin
              FROM reservations r
              JOIN places p ON p.id = r.place_id
              JOIN utilisateurs u ON u.id = r.utilisateur_id

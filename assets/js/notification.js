@@ -1,7 +1,12 @@
 var derniereId = null;          // null = premier appel
-var historique = [];            // notifications gardées dans la cloche
-var nonLues = 0;
-var utilisateur = document.getElementById('app').getAttribute('data-user');
+var historique = JSON.parse(sessionStorage.getItem('historique') || '[]');
+var nonLues = parseInt(sessionStorage.getItem('nonLues') || '0', 10);
+
+function sauvegarder() {
+    sessionStorage.setItem('historique', JSON.stringify(historique));
+    sessionStorage.setItem('nonLues', nonLues);
+}
+var utilisateurId = parseInt(document.getElementById('app').getAttribute('data-user-id'), 10);
 
 var ICONE_OK =
     '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" ' +
@@ -90,6 +95,7 @@ function ajouterHistorique(titre, texte, estMoi) {
     });
     if (historique.length > 20) { historique.pop(); }
     if (!estMoi) { nonLues++; }
+    sauvegarder();
     majBadge();
     dessinerHistorique();
 }
@@ -101,13 +107,15 @@ document.getElementById('cloche').addEventListener('click', function (e) {
     panneau.classList.toggle('cache');
     if (!panneau.classList.contains('cache')) {
         nonLues = 0;
+        sauvegarder();
         majBadge();
     }
 });
 document.addEventListener('click', function (e) {
     if (!panneau.contains(e.target)) { panneau.classList.add('cache'); }
 });
-
+majBadge();
+dessinerHistorique();
 /* ---------- Polling toutes les 3 secondes ---------- */
 function verifierNotifications() {
     var url = 'ajax/get_notifications.php';
@@ -119,7 +127,7 @@ function verifierNotifications() {
         derniereId = rep.derniere_id;
 
         rep.nouvelles.forEach(function (n) {
-            var estMoi = (n.nom === utilisateur);
+                        var estMoi = (parseInt(n.utilisateur_id, 10) === utilisateurId);
             var titre = estMoi ? 'Réservation confirmée' : 'Nouvelle réservation';
             var texte = (estMoi ? 'Tu as réservé' : n.nom + ' a réservé')
                 + ' la place ' + n.numero + ' · '

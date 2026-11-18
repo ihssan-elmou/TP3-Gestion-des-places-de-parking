@@ -1,12 +1,13 @@
 <?php
 $titre = 'Parking';
-$scripts = ['parking.js', 'reservation.js', 'notification.js'];
+$scripts = ['commun.js', 'parking.js', 'reservation.js', 'notification.js'];
 require __DIR__ . '/../layouts/header.php';
 require __DIR__ . '/../layouts/navbar.php';
 ?>
 
-<div id="app" data-user="<?= htmlspecialchars($_SESSION['utilisateur_nom']) ?>"></div>
-<div id="toasts" class="toasts"></div>
+<div id="app"
+     data-user="<?= htmlspecialchars($_SESSION['utilisateur_nom']) ?>"
+     data-user-id="<?= (int) $_SESSION['utilisateur_id'] ?>"></div>
 
 <main class="dashboard">
     <section class="carte">

@@ -1,44 +1,30 @@
 var LIBELLES = { en_cours: 'En cours', a_venir: 'À venir', terminee: 'Terminée' };
 
-// Requête XMLHttpRequest (cette page ne charge pas parking.js)
-function ajax(methode, url, donnees, callback) {
-    var objetXHR = new XMLHttpRequest();
-    objetXHR.open(methode, url, true);
-
-    // Fonction de rappel, nommée comme dans le cours
-    objetXHR.onreadystatechange = function actualiserPage() {
-        if (objetXHR.readyState === 4) {
-            if (objetXHR.status === 401) {          // session expirée
-                window.location.href = 'index.php?action=login';
-                return;
-            }
-            var reponse = null;
-            try { reponse = JSON.parse(objetXHR.responseText); } catch (e) {}
-            callback(reponse);
-        }
-    };
-
-    if (methode === 'POST') {
-        objetXHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        objetXHR.send(donnees);
-    } else {
-        objetXHR.send(null);
-    }
-}
-
-// "2026-11-05 16:00:00" -> "05/11 16:00"
-function formatHeure(dt) {
-    return dt.substring(8, 10) + '/' + dt.substring(5, 7) + ' ' + dt.substring(11, 16);
-}
-
 function afficherMessage(texte, succes) {
     var msg = document.getElementById('message-annulation');
     msg.textContent = texte;
     msg.className = 'message ' + (succes ? 'succes' : 'erreur');
 }
 
+var modalFond = document.getElementById('modal-fond');
+var reservationAAnnuler = null;
+
+function fermerModal() {
+    modalFond.classList.add('cache');
+    reservationAAnnuler = null;
+}
+
 function annuler(id, numero) {
-    if (!confirm('Annuler la réservation de la place ' + numero + ' ?')) { return; }
+    reservationAAnnuler = id;
+    document.getElementById('modal-texte').textContent =
+        'La réservation de la place ' + numero + ' sera supprimée.';
+    modalFond.classList.remove('cache');
+}
+
+function confirmerAnnulation() {
+    var id = reservationAAnnuler;
+    fermerModal();
+    if (id === null) { return; }
 
     ajax('POST', 'ajax/cancel_reservation.php',
         'reservation_id=' + encodeURIComponent(id),
@@ -51,6 +37,15 @@ function annuler(id, numero) {
             chargerMesReservations();
         });
 }
+
+document.getElementById('modal-oui').addEventListener('click', confirmerAnnulation);
+document.getElementById('modal-non').addEventListener('click', fermerModal);
+modalFond.addEventListener('click', function (e) {
+    if (e.target === modalFond) { fermerModal(); }     // clic en dehors de la fenêtre
+});
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { fermerModal(); }
+});
 
 function dessinerTableau(liste) {
     var conteneur = document.getElementById('tableau-reservations');

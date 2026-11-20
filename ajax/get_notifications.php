@@ -8,7 +8,7 @@ try {
     // Premier appel : pas de "since" -> on mémorise seulement le dernier id
     $since = isset($_GET['since']) ? (int) $_GET['since'] : null;
 
-    $data = NotificationTraitement::depuis($since);
+    $data = notifications_depuis($since);
 
     repondreJson([
         'success'     => true,

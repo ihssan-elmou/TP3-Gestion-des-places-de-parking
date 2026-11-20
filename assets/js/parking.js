@@ -46,6 +46,28 @@ function dessinerZones() {
     });
 }
 
+var JOURS = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+
+// "2026-11-19 08:00:00" -> "Jusqu'à 08:00" (aujourd'hui) ou "Jusqu'au jeu 19/11 à 08:00" (autre jour)
+function libelleFin(dt) {
+    var annee = parseInt(dt.substring(0, 4), 10);
+    var mois  = parseInt(dt.substring(5, 7), 10);
+    var jour  = parseInt(dt.substring(8, 10), 10);
+    var heure = dt.substring(11, 16);
+
+    var aujourdhui = new Date();
+    var memeJour = (annee === aujourdhui.getFullYear() &&
+                    mois  === aujourdhui.getMonth() + 1 &&
+                    jour  === aujourdhui.getDate());
+
+    if (memeJour) {
+        return "Jusqu'à " + heure;
+    }
+
+    var nomJour = JOURS[new Date(annee, mois - 1, jour).getDay()];
+    return "Jusqu'au " + nomJour + ' ' + pad(jour) + '/' + pad(mois) + ' à ' + heure;
+}
+
 function dessinerGrille() {
     var grille = document.getElementById('grille-places');
     grille.innerHTML = '';
@@ -70,10 +92,10 @@ function dessinerGrille() {
 
         var info = document.createElement('span');
         info.className = 'info';
-        info.textContent = (p.etat === 'libre')
+                info.textContent = (p.etat === 'libre')
             ? 'Libre'
-            : "Jusqu'à " + p.libre_a_partir_de.substring(11, 16);
-
+            : libelleFin(p.libre_a_partir_de);
+            
         carte.appendChild(num);
         carte.appendChild(info);
         carte.addEventListener('click', function () {

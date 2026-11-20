@@ -1,5 +1,3 @@
-function pad(n) { return n < 10 ? '0' + n : n; }
-
 function dateLocale(d) {
     return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
 }
@@ -29,7 +27,7 @@ function initialiserChamps() {
 initialiserChamps();
 
 // La date de départ ne peut pas être avant la date d'arrivée
-document.getElementById('date_res').addEventListener('change', function () {
+document.getElementById('date_res').addErntListener('change', function () {
     var dFin = document.getElementById('date_fin');
     dFin.min = this.value;
     if (dFin.value < this.value) { dFin.value = this.value; }

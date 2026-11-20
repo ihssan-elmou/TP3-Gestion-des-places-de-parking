@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $resultat = ReservationTraitement::reserver(
+    $resultat = reserver(
         (int) $_SESSION['utilisateur_id'],
         $_POST
     );

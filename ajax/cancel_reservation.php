@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $resultat = ReservationTraitement::annuler((int) $_SESSION['utilisateur_id'], $_POST);
+    $resultat = annuler_reservation((int) $_SESSION['utilisateur_id'], $_POST);
 
     repondreJson(
         ['success' => $resultat['ok'], 'message' => $resultat['message']],

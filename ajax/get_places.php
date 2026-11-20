@@ -10,14 +10,14 @@ try {
         $placeId = (int) $_GET['place_id'];
         repondreJson([
             'success'      => true,
-            'reservations' => PlaceTraitement::prochaines($placeId)
+            'reservations' => prochaines_reservations($placeId)
         ]);
     }
 
     // Sans paramètre : toutes les places avec leur état
     repondreJson([
         'success' => true,
-        'places'  => PlaceTraitement::lister()
+        'places'  => lister_places()
     ]);
 } catch (Throwable $e) {
     repondreJson(['success' => false, 'message' => 'Erreur serveur'], 500);

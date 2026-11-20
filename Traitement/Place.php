@@ -2,17 +2,14 @@
 require_once __DIR__ . '/Outils.php';
 require_once __DIR__ . '/../BD/Place.php';
 
-class PlaceTraitement
+function lister_places(): array
 {
-    public static function lister(): array
-    {
-        $maintenant = date('Y-m-d H:i:s');
-        return Place::toutesAvecEtat($maintenant);
-    }
+    $maintenant = date('Y-m-d H:i:s');
+    return bd_places_avec_etat($maintenant);
+}
 
-    public static function prochaines(int $placeId): array
-    {
-        $maintenant = date('Y-m-d H:i:s');
-        return Place::prochainesReservations($placeId, $maintenant);
-    }
+function prochaines_reservations(int $placeId): array
+{
+    $maintenant = date('Y-m-d H:i:s');
+    return bd_prochaines_reservations($placeId, $maintenant);
 }

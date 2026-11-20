@@ -14,7 +14,7 @@ switch ($action) {
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $erreur = AuthTraitement::connecter($_POST);
+            $erreur = connecter($_POST);
             if ($erreur === null) {
                 header('Location: index.php?action=parking');
                 exit;
@@ -28,7 +28,7 @@ switch ($action) {
 
     case 'register':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $erreur = AuthTraitement::inscrire($_POST);
+            $erreur = inscrire($_POST);
             if ($erreur === null) {
                 header('Location: index.php?action=login&inscrit=1');
                 exit;
@@ -38,7 +38,7 @@ switch ($action) {
         break;
 
     case 'logout':
-        AuthTraitement::deconnecter();
+        deconnecter();
         header('Location: index.php?action=login');
         exit;
 

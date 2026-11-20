@@ -2,73 +2,70 @@
 require_once __DIR__ . '/Outils.php';
 require_once __DIR__ . '/../BD/Reservation.php';
 
-class ReservationTraitement
+function reserver(int $userId, array $post): array
 {
-    public static function reserver(int $userId, array $post): array
-    {
-        $placeId = (int) ($post['place_id'] ?? 0);
-        $debutBr = nettoyer($post['heure_debut'] ?? '');
-        $finBr   = nettoyer($post['heure_fin'] ?? '');
+    $placeId = (int) ($post['place_id'] ?? 0);
+    $debutBr = nettoyer($post['heure_debut'] ?? '');
+    $finBr   = nettoyer($post['heure_fin'] ?? '');
 
-        // 1. Champs obligatoires
-        if ($placeId <= 0 || $debutBr === '' || $finBr === '') {
-            return ['ok' => false, 'message' => 'Tous les champs sont obligatoires'];
-        }
-
-        // 2. Dates valides
-        $tDebut = strtotime($debutBr);
-        $tFin   = strtotime($finBr);
-        if ($tDebut === false || $tFin === false) {
-            return ['ok' => false, 'message' => 'Date ou heure invalide'];
-        }
-
-        // 3. Fin après début (R2)
-        if ($tFin <= $tDebut) {
-            return ['ok' => false, 'message' => "L'heure de fin doit être après l'heure de début"];
-        }
-
-        // 4. Début pas dans le passé (R3), avec 60 s de tolérance
-        if ($tDebut < time() - 60) {
-            return ['ok' => false, 'message' => 'Le début ne peut pas être dans le passé'];
-        }
-
-        // 5. Enregistrement (vérifie le chevauchement dans la transaction)
-        return Reservation::creer(
-            $userId,
-            $placeId,
-            date('Y-m-d H:i:s', $tDebut),
-            date('Y-m-d H:i:s', $tFin)
-        );
+    // 1. Champs obligatoires
+    if ($placeId <= 0 || $debutBr === '' || $finBr === '') {
+        return ['ok' => false, 'message' => 'Tous les champs sont obligatoires'];
     }
 
-        public static function mesReservations(int $userId): array
-    {
-        $maintenant = date('Y-m-d H:i:s');
-        $lignes = Reservation::parUtilisateur($userId);
-
-        foreach ($lignes as &$l) {
-            if ($l['heure_fin'] <= $maintenant) {
-                $l['statut'] = 'terminee';
-            } elseif ($l['heure_debut'] <= $maintenant) {
-                $l['statut'] = 'en_cours';
-            } else {
-                $l['statut'] = 'a_venir';
-            }
-        }
-        unset($l);
-        return $lignes;
+    // 2. Dates valides
+    $tDebut = strtotime($debutBr);
+    $tFin   = strtotime($finBr);
+    if ($tDebut === false || $tFin === false) {
+        return ['ok' => false, 'message' => 'Date ou heure invalide'];
     }
 
-    public static function annuler(int $userId, array $post): array
-    {
-        $id = (int) ($post['reservation_id'] ?? 0);
-        if ($id <= 0) {
-            return ['ok' => false, 'message' => 'Réservation invalide'];
-        }
-
-        if (Reservation::annuler($id, $userId, date('Y-m-d H:i:s'))) {
-            return ['ok' => true, 'message' => 'Réservation annulée'];
-        }
-        return ['ok' => false, 'message' => "Impossible d'annuler cette réservation"];
+    // 3. Fin après début (R2)
+    if ($tFin <= $tDebut) {
+        return ['ok' => false, 'message' => "L'heure de fin doit être après l'heure de début"];
     }
+
+    // 4. Début pas dans le passé (R3), avec 60 s de tolérance
+    if ($tDebut < time() - 60) {
+        return ['ok' => false, 'message' => 'Le début ne peut pas être dans le passé'];
+    }
+
+    // 5. Enregistrement (vérifie le chevauchement dans la transaction)
+    return bd_creer_reservation(
+        $userId,
+        $placeId,
+        date('Y-m-d H:i:s', $tDebut),
+        date('Y-m-d H:i:s', $tFin)
+    );
+}
+
+function mes_reservations(int $userId): array
+{
+    $maintenant = date('Y-m-d H:i:s');
+    $lignes = bd_reservations_utilisateur($userId);
+
+    foreach ($lignes as &$l) {
+        if ($l['heure_fin'] <= $maintenant) {
+            $l['statut'] = 'terminee';
+        } elseif ($l['heure_debut'] <= $maintenant) {
+            $l['statut'] = 'en_cours';
+        } else {
+            $l['statut'] = 'a_venir';
+        }
+    }
+    unset($l);
+    return $lignes;
+}
+
+function annuler_reservation(int $userId, array $post): array
+{
+    $id = (int) ($post['reservation_id'] ?? 0);
+    if ($id <= 0) {
+        return ['ok' => false, 'message' => 'Réservation invalide'];
+    }
+
+    if (bd_annuler_reservation($id, $userId, date('Y-m-d H:i:s'))) {
+        return ['ok' => true, 'message' => 'Réservation annulée'];
+    }
+    return ['ok' => false, 'message' => "Impossible d'annuler cette réservation"];
 }

@@ -9,6 +9,8 @@ require __DIR__ . '/../layouts/navbar.php';
      data-user="<?= htmlspecialchars($_SESSION['utilisateur_nom']) ?>"
      data-user-id="<?= (int) $_SESSION['utilisateur_id'] ?>"></div>
 
+<div id="toasts" class="toasts"></div>
+
 <main class="dashboard">
     <section class="carte">
         <div class="carte-entete">
